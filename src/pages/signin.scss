@@ -10,11 +10,13 @@
   margin: 25px 0;
 }
 
-.email-label, .password-label {
+.email-label,
+.password-label {
   color: $text_color;
 }
 
-.email-input, .password-input {
+.email-input,
+.password-input {
   width: 100%;
   font-size: large;
   height: 30px;

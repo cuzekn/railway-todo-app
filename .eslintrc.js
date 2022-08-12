@@ -9,7 +9,7 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:jsx-a11y/recommended",
-    "prettier"
+    "prettier",
   ],
   parserOptions: {
     ecmaFeatures: {
@@ -19,8 +19,12 @@ module.exports = {
     sourceType: "module",
   },
   rules: {
-    "no-undef": "warn",
+    "no-undef": "off",
+    "no-unused-vars": "off",
     "react/prop-types": "off",
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "react-hooks/exhaustive-deps": "off",
   },
   settings: {
     react: {

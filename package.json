@@ -22,6 +22,7 @@
     "eslint-plugin-jsx-a11y": "^6.6.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "react-scripts": "5.0.1"
   },
@@ -29,7 +30,13 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "run-p --continue-on-error lint:*",
+    "lint:eslint": "eslint --ext .jsx, .js .",
+    "lint:prettier": "prettier --check .",
+    "fix": "run-s --continue-on-error fix:eslint fix:prettier",
+    "fix:eslint": "eslint --ext .jsx, .js --fix .",
+    "fix:prettier": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [

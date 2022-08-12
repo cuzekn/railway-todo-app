@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import "_variables.scss";
 
 .signin {
   width: 500px;
@@ -10,7 +11,7 @@
 }
 
 .email-label, .password-label {
-  color: #555555;
+  color: $text_color;
 }
 
 .email-input, .password-input {
@@ -21,13 +22,13 @@
 }
 
 .signin-button {
-  background-color: #242F9B;
-  color: #ffffff;
+  background-color: $main_color;
+  color: $white;
   width: 100px;
   height: 40px;
   border-radius: 5px;
 }
 
 .error-message {
-  color: #ff3333;
+  color: $error_color;
 }

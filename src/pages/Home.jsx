@@ -86,7 +86,6 @@ export const Home = () => {
             {lists.map((list, key) => {
               const isActive = list.id === selectListId;
               return (
-                // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
                 <li
                   key={key}
                   className={`list-tab-item ${isActive ? "active" : ""}`}

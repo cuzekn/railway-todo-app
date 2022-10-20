@@ -31,7 +31,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "run-p --continue-on-error lint:*",
+    "lint": "run-p --continue-on-error lint:eslint lint:prettier",
     "lint:eslint": "eslint --ext .jsx,.js .",
     "lint:prettier": "prettier --check .",
     "fix": "run-s --continue-on-error fix:eslint fix:prettier",

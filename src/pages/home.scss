@@ -1,14 +1,37 @@
 @import "_variables.scss";
 
 .taskList {
-  margin: 50px auto;
+  margin: 50px 15px;
   list-style: none;
-  width: 1000px;
+  width: 300px;
+  @media screen and (min-width: $rp_s) {
+    margin: 50px auto;
+    list-style: none;
+    width: 500px;
+  }
+  @media screen and (min-width: $rp_m) {
+    margin: 50px auto;
+    list-style: none;
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    margin: 50px auto;
+    list-style: none;
+    width: 1000px;
+  }
 }
 
 .list-header {
+  width: 350px;
+  margin: 0px;
   display: flex;
   justify-content: space-between;
+  @media screen and (min-width: $rp_s) {
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    width: 1000px;
+  }
 }
 
 .list-menu {
@@ -23,11 +46,22 @@
 
 .list-tab-item {
   flex-shrink: 0;
-  width: 100px;
-  padding: 0 25px;
+  padding: 5px 25px;
   text-overflow: normal;
   margin-right: 5px;
   border: solid 1px $main_color;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+
+  :focus {
+    outline: green solid 3px;
+  }
+}
+
+.list-focus {
+  width: 100px;
+  margin-right: 5px;
   justify-content: center;
   align-items: center;
 }
@@ -39,6 +73,13 @@
 
 .tasks {
   margin-top: 25px;
+  width: 350px;
+  @media screen and (min-width: $rp_s) {
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    width: 1000px;
+  }
 }
 
 .tasks-header {
@@ -48,7 +89,7 @@
 
 .task-item {
   list-style-type: none;
-  height: 70px;
+  height: 110px;
   width: calc(100% - 25px);
   background-color: $bg_color;
   padding-left: 25px;

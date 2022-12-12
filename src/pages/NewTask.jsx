@@ -11,16 +11,25 @@ export const NewTask = () => {
   const [lists, setLists] = useState([]);
   const [title, setTitle] = useState("");
   const [detail, setDetail] = useState("");
+  const [limit, setLimit] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [cookies] = useCookies();
   const navigate = useNavigate();
   const handleTitleChange = (e) => setTitle(e.target.value);
   const handleDetailChange = (e) => setDetail(e.target.value);
   const handleSelectList = (id) => setSelectListId(id);
+
+  const handleLimitChange = (e) => {
+    const limitDate = new Date(e.target.value);
+    setLimit(limitDate.toISOString().split(".000Z")[0]+"Z");
+    console.log(limitDate.toISOString().split(".000Z")[0]+"Z");
+  }
+
   const onCreateTask = () => {
     const data = {
       title: title,
       detail: detail,
+      limit: limit,
       done: false,
     };
 
@@ -36,6 +45,7 @@ export const NewTask = () => {
       .catch((err) => {
         setErrorMessage(`タスクの作成に失敗しました。${err}`);
       });
+      console.log(limit);
   };
 
   useEffect(() => {
@@ -53,6 +63,12 @@ export const NewTask = () => {
         setErrorMessage(`リストの取得に失敗しました。${err}`);
       });
   }, []);
+
+  const onCheck = (e) => {
+    const dt = new Date(limit);
+    console.log(dt.toISOString().split(".000Z")[0]+"Z");
+    setLimit("")
+  }
 
   return (
     <div>
@@ -90,6 +106,12 @@ export const NewTask = () => {
             className="new-task-detail"
           />
           <br />
+          <label>期限</label>
+          <input 
+          type="datetime-local"
+          onChange={handleLimitChange}
+          />
+          <br />
           <button
             type="button"
             className="new-task-button"
@@ -98,6 +120,8 @@ export const NewTask = () => {
             作成
           </button>
         </form>
+        <input type="datetime-local" onChange={(e) => setLimit(e.target.value)} />
+        <button onClick={onCheck}>確認</button>
       </main>
     </div>
   );

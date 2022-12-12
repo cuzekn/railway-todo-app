@@ -11,6 +11,7 @@ export const Home = () => {
   const [lists, setLists] = useState([]);
   const [selectListId, setSelectListId] = useState();
   const [tasks, setTasks] = useState([]);
+  const [limit, setLimit] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [cookies] = useCookies();
   const handleIsDoneDisplayChange = (e) => setIsDoneDisplay(e.target.value);
@@ -41,6 +42,8 @@ export const Home = () => {
         })
         .then((res) => {
           setTasks(res.data.tasks);
+          console.log(res.data)
+          
         })
         .catch((err) => {
           setErrorMessage(`タスクの取得に失敗しました。${err}`);
@@ -165,6 +168,9 @@ const Tasks = (props) => {
               {task.title}
               <br />
               {task.done ? "完了" : "未完了"}
+              <br />
+              <p>期限</p>
+              {task.limit}
             </Link>
           </li>
         ))}

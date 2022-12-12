@@ -1,0 +1,119 @@
+@import "_variables.scss";
+
+.taskList {
+  margin: 50px 15px;
+  list-style: none;
+  width: 300px;
+  @media screen and (min-width: $rp_s) {
+    margin: 50px auto;
+    list-style: none;
+    width: 500px;
+  }
+  @media screen and (min-width: $rp_m) {
+    margin: 50px auto;
+    list-style: none;
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    margin: 50px auto;
+    list-style: none;
+    width: 1000px;
+  }
+}
+
+.list-header {
+  width: 350px;
+  margin: 0px;
+  display: flex;
+  justify-content: space-between;
+  @media screen and (min-width: $rp_s) {
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    width: 1000px;
+  }
+}
+
+.list-menu {
+  text-align: right;
+}
+
+.list-tab {
+  list-style: none;
+  display: flex;
+  overflow-x: auto;
+}
+
+.list-tab-item {
+  flex-shrink: 0;
+  padding: 5px 25px;
+  text-overflow: normal;
+  margin-right: 5px;
+  border: solid 1px $main_color;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+
+  :focus {
+    outline: green solid 3px;
+  }
+}
+
+.list-focus {
+  width: 100px;
+  margin-right: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.active {
+  background-color: $main_color;
+  color: $white;
+}
+
+.tasks {
+  margin-top: 25px;
+  width: 350px;
+  @media screen and (min-width: $rp_s) {
+    width: 700px;
+  }
+  @media screen and (min-width: $rp_l) {
+    width: 1000px;
+  }
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-item {
+  list-style-type: none;
+  height: 110px;
+  width: calc(100% - 25px);
+  background-color: $bg_color;
+  padding-left: 25px;
+  font-size: large;
+  border: solid 1px $white;
+}
+
+.task-item-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: $black;
+}
+
+.error-message {
+  color: $error_color;
+}
+
+.display-select-wrapper {
+  width: 100px;
+  margin: 0 0 25px auto;
+}
+
+.display-select {
+  width: 100%;
+}

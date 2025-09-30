@@ -2,47 +2,29 @@
   "name": "railway-todo-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
-    "@reduxjs/toolkit": "^1.8.2",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.0",
-    "axios": "^0.27.2",
-    "react": "^18.2.0",
-    "react-cookie": "^4.1.1",
-    "react-dom": "^18.2.0",
-    "react-redux": "^8.0.2",
-    "react-router-dom": "^6.3.0",
-    "sass": "^1.54.4",
-    "web-vitals": "^2.1.4"
+    "@fontsource/inter": "^5.0.5",
+    "@reduxjs/toolkit": "^2.7.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@unocss/reset": "^0.53.6",
+    "axios": "^1.8.3",
+    "react": "^18.3.1",
+    "react-cookie": "^8.0.1",
+    "react-dom": "^18.3.1",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^5.3.0"
   },
   "devDependencies": {
-    "eslint": "^8.21.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-react": "^7.30.1",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^2.7.1",
-    "react-scripts": "5.0.1"
+    "@vitejs/plugin-react-swc": "^3.3.2",
+    "vite": "^6.3.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "run-p --continue-on-error lint:eslint lint:prettier",
-    "lint:eslint": "eslint --ext .jsx,.js .",
-    "lint:prettier": "prettier --check .",
-    "fix": "run-s --continue-on-error fix:eslint fix:prettier",
-    "fix:eslint": "eslint --ext .jsx,.js --fix .",
-    "fix:prettier": "prettier --write ."
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build"
   },
   "browserslist": {
     "production": [

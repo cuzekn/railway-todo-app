@@ -1,29 +1,31 @@
-import { ListIcon } from '~/icons/ListIcon'
-import './Sidebar.css'
-import { Link, useLocation } from 'react-router-dom'
-import { PlusIcon } from '~/icons/PlusIcon'
-import { useSelector, useDispatch } from 'react-redux'
-import { useLogout } from '~/hooks/useLogout'
-import { useEffect } from 'react'
-import { fetchLists } from '~/store/list/index'
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
+
+import { useLogout } from '@/hooks/useLogout';
+import { ListIcon } from '@/icons/ListIcon';
+import { PlusIcon } from '@/icons/PlusIcon';
+import { fetchLists } from '@/store/list/index';
+
+import './Sidebar.css';
 
 export const Sidebar = () => {
-  const dispatch = useDispatch()
-  const { pathname } = useLocation()
+  const dispatch = useDispatch();
+  const { pathname } = useLocation();
 
-  const lists = useSelector(state => state.list.lists)
-  const activeId = useSelector(state => state.list.current)
-  const isLoggedIn = useSelector(state => state.auth.token !== null)
-  const userName = useSelector(state => state.auth.user?.name)
+  const lists = useSelector(state => state.list.lists);
+  const activeId = useSelector(state => state.list.current);
+  const isLoggedIn = useSelector(state => state.auth.token !== null);
+  const userName = useSelector(state => state.auth.user?.name);
 
   // リスト新規作成ページではリストをハイライトしない
-  const shouldHighlight = !pathname.startsWith('/list/new')
+  const shouldHighlight = !pathname.startsWith('/list/new');
 
-  const { logout } = useLogout()
+  const { logout } = useLogout();
 
   useEffect(() => {
-    void dispatch(fetchLists())
-  }, [])
+    void dispatch(fetchLists());
+  }, [dispatch]);
 
   return (
     <div className="sidebar">
@@ -43,10 +45,7 @@ export const Sidebar = () => {
                       to={`/lists/${listItem.id}`}
                       className="sidebar__lists_item"
                     >
-                      <ListIcon
-                        aria-hidden
-                        className="sidebar__lists_icon"
-                      />
+                      <ListIcon aria-hidden className="sidebar__lists_icon" />
                       {listItem.title}
                     </Link>
                   </li>
@@ -80,5 +79,5 @@ export const Sidebar = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};

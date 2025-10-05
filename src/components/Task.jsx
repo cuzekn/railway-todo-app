@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Modal from "react-modal";
-import "./task.scss";
+import React, { useState } from 'react';
+import Modal from 'react-modal';
+import { Link } from 'react-router-dom';
 
-const Tasks = (props) => {
+import './task.scss';
+
+const Tasks = props => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  const handleOpenModal = (task) => {
+  const handleOpenModal = task => {
     setSelectedTask(task);
     setIsModalOpen(true);
   };
@@ -20,19 +21,22 @@ const Tasks = (props) => {
   const { tasks, selectListId, isDoneDisplay } = props;
   if (tasks === null) return <></>;
 
-  if (isDoneDisplay == "done") {
+  if (isDoneDisplay == 'done') {
     return (
       <ul>
         {tasks
-          .filter((task) => {
+          .filter(task => {
             return task.done === true;
           })
           .map((task, key) => (
             <li key={key} className="task-item">
-              <Link to={`/lists/${selectListId}/tasks/${task.id}`} className="task-item-link">
+              <Link
+                to={`/lists/${selectListId}/tasks/${task.id}`}
+                className="task-item-link"
+              >
                 {task.title}
                 <br />
-                {task.done ? "完了" : "未完了"}
+                {task.done ? '完了' : '未完了'}
               </Link>
             </li>
           ))}
@@ -44,7 +48,7 @@ const Tasks = (props) => {
     <>
       <ul>
         {tasks
-          .filter((task) => {
+          .filter(task => {
             return task.done === false;
           })
           .map((task, key) => (
@@ -52,17 +56,17 @@ const Tasks = (props) => {
               <button className="task-item-link">
                 {task.title}
                 <br />
-                {task.done ? "完了" : "未完了"}
+                {task.done ? '完了' : '未完了'}
                 <br />
                 {task.limit ? (
                   <>
                     <p>期限</p>
-                    {new Date(task.limit).toLocaleString("ja-JP", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit"
+                    {new Date(task.limit).toLocaleString('ja-JP', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
                     })}
                     <p>残り日数</p>
                     {(() => {
@@ -75,15 +79,27 @@ const Tasks = (props) => {
                         limitDate.getMonth(),
                         limitDate.getDate()
                       );
-                      const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                      const todayOnly = new Date(
+                        today.getFullYear(),
+                        today.getMonth(),
+                        today.getDate()
+                      );
 
                       // 日数の差を計算（ミリ秒を日数に変換）
-                      const diffDays = Math.floor((limitDateOnly - todayOnly) / (1000 * 60 * 60 * 24));
+                      const diffDays = Math.floor(
+                        (limitDateOnly - todayOnly) / (1000 * 60 * 60 * 24)
+                      );
 
                       if (diffDays === 0) {
-                        return <span style={{ color: "blue" }}>今日が期限です</span>;
+                        return (
+                          <span style={{ color: 'blue' }}>今日が期限です</span>
+                        );
                       } else if (diffDays < 0) {
-                        return <span style={{ color: "red" }}>期限が過ぎています</span>;
+                        return (
+                          <span style={{ color: 'red' }}>
+                            期限が過ぎています
+                          </span>
+                        );
                       } else {
                         return <span>残り{diffDays}日</span>;
                       }

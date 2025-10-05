@@ -1,42 +1,44 @@
-import React, { useCallback, useState } from 'react'
-import { Navigate, Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import './index.css'
-import { useSignup } from '~/hooks/useSignup'
-import { useId } from '~/hooks/useId'
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
+
+import { useId } from '@/hooks/useId';
+import { useSignup } from '@/hooks/useSignup';
+
+import './index.css';
 
 const SignUp = () => {
-  const auth = useSelector(state => state.auth.token !== null)
+  const auth = useSelector(state => state.auth.token !== null);
 
-  const id = useId()
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const id = useId();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { signup } = useSignup()
+  const { signup } = useSignup();
 
   const onSubmit = useCallback(
     event => {
-      event.preventDefault()
+      event.preventDefault();
 
-      setIsSubmitting(true)
+      setIsSubmitting(true);
 
       signup({ email, name, password })
         .catch(err => {
-          setErrorMessage(`サインアップに失敗しました: ${err.message}`)
+          setErrorMessage(`サインアップに失敗しました: ${err.message}`);
         })
         .finally(() => {
-          setIsSubmitting(false)
-        })
+          setIsSubmitting(false);
+        });
     },
-    [email, name, password],
-  )
+    [email, name, password, signup]
+  );
 
   if (auth) {
-    return <Navigate to="/" />
+    return <Navigate to="/" />;
   }
 
   return (
@@ -99,7 +101,7 @@ const SignUp = () => {
         </div>
       </form>
     </main>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;

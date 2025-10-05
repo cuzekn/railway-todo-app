@@ -1,77 +1,79 @@
-import { useCallback, useState, useEffect } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { BackButton } from '~/components/BackButton'
-import './index.css'
-import { fetchLists, updateList, deleteList } from '~/store/list'
-import { useId } from '~/hooks/useId'
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+
+import { BackButton } from '@/components/BackButton';
+import { useId } from '@/hooks/useId';
+import { deleteList, fetchLists, updateList } from '@/store/list';
+
+import './index.css';
 
 const EditList = () => {
-  const id = useId()
+  const id = useId();
 
-  const { listId } = useParams()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
+  const { listId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [title, setTitle] = useState('')
+  const [title, setTitle] = useState('');
 
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const list = useSelector(state =>
-    state.list.lists?.find(list => list.id === listId),
-  )
+    state.list.lists?.find(list => list.id === listId)
+  );
 
   useEffect(() => {
     if (list) {
-      setTitle(list.title)
+      setTitle(list.title);
     }
-  }, [list])
+  }, [list]);
 
   useEffect(() => {
-    void dispatch(fetchLists())
-  }, [listId])
+    void dispatch(fetchLists());
+  }, [dispatch, listId]);
 
   const onSubmit = useCallback(
     event => {
-      event.preventDefault()
+      event.preventDefault();
 
-      setIsSubmitting(true)
+      setIsSubmitting(true);
 
       void dispatch(updateList({ id: listId, title }))
         .unwrap()
         .then(() => {
-          navigate(`/lists/${listId}`)
+          navigate(`/lists/${listId}`);
         })
         .catch(err => {
-          setErrorMessage(err.message)
+          setErrorMessage(err.message);
         })
         .finally(() => {
-          setIsSubmitting(false)
-        })
+          setIsSubmitting(false);
+        });
     },
-    [title, listId],
-  )
+    [dispatch, listId, title, navigate]
+  );
 
   const handleDelete = useCallback(() => {
     if (!window.confirm('Are you sure you want to delete this list?')) {
-      return
+      return;
     }
 
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     void dispatch(deleteList({ id: listId }))
       .unwrap()
       .then(() => {
-        navigate(`/`)
+        navigate(`/`);
       })
       .catch(err => {
-        setErrorMessage(err.message)
+        setErrorMessage(err.message);
       })
       .finally(() => {
-        setIsSubmitting(false)
-      })
-  }, [])
+        setIsSubmitting(false);
+      });
+  }, [dispatch, listId, navigate]);
 
   return (
     <main className="edit_list">
@@ -110,7 +112,7 @@ const EditList = () => {
         </div>
       </form>
     </main>
-  )
-}
+  );
+};
 
-export default EditList
+export default EditList;

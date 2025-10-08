@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
+import { CheckboxField } from '@/components/CheckboxField';
+import { DeleteButton } from '@/components/DeleteButton';
+import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { setCurrentList } from '@/store/list';
 import { deleteTask, fetchTasks, updateTask } from '@/store/task';
@@ -61,79 +64,51 @@ const EditTask = () => {
     [title, taskId, listId, detail, done, navigate, dispatch]
   );
 
-  const handleDelete = useCallback(() => {
-    if (!window.confirm('Are you sure you want to delete this task?')) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    void dispatch(deleteTask({ id: taskId }))
-      .unwrap()
-      .then(() => {
-        navigate(`/`);
-      })
-      .catch(err => {
-        setErrorMessage(err.message);
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
-  }, [dispatch, navigate, taskId]);
-
   return (
     <main className="edit_list">
       <BackButton />
       <h2 className="edit_list__title">Edit List</h2>
       <p className="edit_list__error">{errorMessage}</p>
       <form className="edit_list__form" onSubmit={onSubmit}>
-        <fieldset className="edit_list__form_field">
-          <label htmlFor={`${id}-title`} className="edit_list__form_label">
-            Title
-          </label>
-          <input
-            id={`${id}-title`}
-            className="app_input"
-            placeholder="Buy some milk"
-            value={title}
-            onChange={event => setTitle(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className="edit_list__form_field">
-          <label htmlFor={`${id}-detail`} className="edit_list__form_label">
-            Description
-          </label>
-          <textarea
-            id={`${id}-detail`}
-            className="app_input"
-            placeholder="Blah blah blah"
-            value={detail}
-            onChange={event => setDetail(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className="edit_list__form_field">
-          <label htmlFor={`${id}-done`} className="edit_list__form_label">
-            Is Done
-          </label>
-          <div>
-            <input
-              id={`${id}-done`}
-              type="checkbox"
-              checked={done}
-              onChange={event => setDone(event.target.checked)}
-            />
-          </div>
-        </fieldset>
+        <TextField
+          label={'Title'}
+          id={id}
+          idTitle="title"
+          placeholder="Buy some milk"
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
+        <TextField
+          label={'Description'}
+          id={id}
+          idTitle="detail"
+          placeholder="Blah blah blah"
+          value={detail}
+          onChange={event => setDetail(event.target.value)}
+        />
+        <CheckboxField
+          label={'Is Done'}
+          id={id}
+          idTitle="done"
+          type="checkbox"
+          checked={done}
+          onChange={event => setDone(event.target.checked)}
+        />
         <div className="edit_list__form_actions">
           <Link to="/" data-variant="secondary" className="app_button">
             Cancel
           </Link>
           <div className="edit_list__form_actions_spacer"></div>
+          <DeleteButton
+            onDelete={() => dispatch(deleteTask({ id: taskId })).unwrap()}
+            onSuccess={() => navigate('/')}
+            onError={error => setErrorMessage(error.message)}
+            confirmMessaage="Are you sure you want to delete this task?"
+          />
           <button
             type="button"
             className="app_button edit_list__form_actions_delete"
             disabled={isSubmitting}
-            onClick={handleDelete}
           >
             Delete
           </button>

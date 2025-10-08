@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
+import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { createList, setCurrentList } from '@/store/list/index';
 
@@ -46,18 +47,14 @@ const NewList = () => {
       <h2 className="new_list__title">New List</h2>
       <p className="new_list__error">{errorMessage}</p>
       <form className="new_list__form" onSubmit={onSubmit}>
-        <fieldset className="new_list__form_field">
-          <label htmlFor={`${id}-title`} className="new_list__form_label">
-            Name
-          </label>
-          <input
-            id={`${id}-title`}
-            className="app_input"
-            placeholder="Family"
-            value={title}
-            onChange={event => setTitle(event.target.value)}
-          />
-        </fieldset>
+        <TextField
+          label={'Name'}
+          id={id}
+          idTitle="title"
+          placeholder="Family"
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
         <div className="new_list__form_actions">
           <Link to="/" data-variant="secondary" className="app_button">
             Cancel

@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
+import { DeleteButton } from '@/components/DeleteButton';
+import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { deleteList, fetchLists, updateList } from '@/store/list';
 
@@ -55,57 +57,31 @@ const EditList = () => {
     [dispatch, listId, title, navigate]
   );
 
-  const handleDelete = useCallback(() => {
-    if (!window.confirm('Are you sure you want to delete this list?')) {
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    void dispatch(deleteList({ id: listId }))
-      .unwrap()
-      .then(() => {
-        navigate(`/`);
-      })
-      .catch(err => {
-        setErrorMessage(err.message);
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
-  }, [dispatch, listId, navigate]);
-
   return (
     <main className="edit_list">
       <BackButton />
       <h2 className="edit_list__title">Edit List</h2>
       <p className="edit_list__error">{errorMessage}</p>
       <form className="edit_list__form" onSubmit={onSubmit}>
-        <fieldset className="edit_list__form_field">
-          <label htmlFor={`${id}-title`} className="edit_list__form_label">
-            Name
-          </label>
-          <input
-            id={`${id}-title`}
-            className="app_input"
-            placeholder="Family"
-            value={title}
-            onChange={event => setTitle(event.target.value)}
-          />
-        </fieldset>
+        <TextField
+          label={'Name'}
+          id={id}
+          idTitle="title"
+          placeholder="Family"
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
         <div className="edit_list__form_actions">
           <Link to="/" data-variant="secondary" className="app_button">
             Cancel
           </Link>
           <div className="edit_list__form_actions_spacer"></div>
-          <button
-            type="button"
-            className="app_button edit_list__form_actions_delete"
-            disabled={isSubmitting}
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
+          <DeleteButton
+            onDelete={() => dispatch(deleteList({ id: listId })).unwrap()}
+            onSuccess={() => navigate('/')}
+            onError={error => setErrorMessage(error.message)}
+            confirmMessaage="Are you sure you want to delete this list?"
+          />
           <button type="submit" className="app_button" disabled={isSubmitting}>
             Update
           </button>

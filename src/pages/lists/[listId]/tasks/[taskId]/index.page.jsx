@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
 import { CheckboxField } from '@/components/CheckboxField';
-import { DeleteButton } from '@/components/DeleteButton';
+import { FormActions } from '@/components/FormActionButton';
 import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { setCurrentList } from '@/store/list';
@@ -94,28 +94,15 @@ const EditTask = () => {
           checked={done}
           onChange={event => setDone(event.target.checked)}
         />
-        <div className="edit_list__form_actions">
-          <Link to="/" data-variant="secondary" className="app_button">
-            Cancel
-          </Link>
-          <div className="edit_list__form_actions_spacer"></div>
-          <DeleteButton
-            onDelete={() => dispatch(deleteTask({ id: taskId })).unwrap()}
-            onSuccess={() => navigate('/')}
-            onError={error => setErrorMessage(error.message)}
-            confirmMessaage="Are you sure you want to delete this task?"
-          />
-          <button
-            type="button"
-            className="app_button edit_list__form_actions_delete"
-            disabled={isSubmitting}
-          >
-            Delete
-          </button>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
-            Update
-          </button>
-        </div>
+        <FormActions
+          cancelPath={`/lists/${listId}`}
+          onDelete={() => dispatch(deleteTask({ id: taskId })).unwrap()}
+          onDeleteSuccess={() => navigate('/')}
+          onDeleteError={error => setErrorMessage(error.message)}
+          deleteConfirmMessage="Are you sure you want to delete this task?"
+          submitLabel="Update"
+          isSubmitting={isSubmitting}
+        />
       </form>
     </main>
   );

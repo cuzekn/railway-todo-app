@@ -1,8 +1,9 @@
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
+import { FormActions } from '@/components/FormActionButton';
 import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { createList, setCurrentList } from '@/store/list/index';
@@ -55,15 +56,11 @@ const NewList = () => {
           value={title}
           onChange={event => setTitle(event.target.value)}
         />
-        <div className="new_list__form_actions">
-          <Link to="/" data-variant="secondary" className="app_button">
-            Cancel
-          </Link>
-          <div className="new_list__form_actions_spacer"></div>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
-            Create
-          </button>
-        </div>
+        <FormActions
+          showDelete={false}
+          submitLabel="Create"
+          isSubmitting={isSubmitting}
+        />
       </form>
     </main>
   );

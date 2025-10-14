@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { BackButton } from '@/components/BackButton';
-import { DeleteButton } from '@/components/DeleteButton';
+import { FormActions } from '@/components/FormActionButton';
 import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { deleteList, fetchLists, updateList } from '@/store/list';
@@ -71,21 +71,15 @@ const EditList = () => {
           value={title}
           onChange={event => setTitle(event.target.value)}
         />
-        <div className="edit_list__form_actions">
-          <Link to="/" data-variant="secondary" className="app_button">
-            Cancel
-          </Link>
-          <div className="edit_list__form_actions_spacer"></div>
-          <DeleteButton
-            onDelete={() => dispatch(deleteList({ id: listId })).unwrap()}
-            onSuccess={() => navigate('/')}
-            onError={error => setErrorMessage(error.message)}
-            confirmMessaage="Are you sure you want to delete this list?"
-          />
-          <button type="submit" className="app_button" disabled={isSubmitting}>
-            Update
-          </button>
-        </div>
+        <FormActions
+          cancelPath={`/lists/${listId}`}
+          onDelete={() => dispatch(deleteList({ id: listId })).unwrap()}
+          onDeleteSuccess={() => navigate('/')}
+          onDeleteError={error => setErrorMessage(error.message)}
+          deleteConfirmMessage="Are you sure you want to delete this list?"
+          submitLabel="Update"
+          isSubmitting={isSubmitting}
+        />
       </form>
     </main>
   );

@@ -94,3 +94,42 @@
 .task_create_form__spacer {
   flex: 1;
 }
+
+.task_create_form__due_date {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task_create_form__date_input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+}
+
+.task_create_form__date_input:focus {
+  outline: none;
+  border-color: #4a90e2;
+}
+
+.task_create_form__date_input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.task_create_form__date_input::-webkit-inner-spin-button,
+.task_create_form__date_input::-webkit-clear-button {
+  display: none;
+}

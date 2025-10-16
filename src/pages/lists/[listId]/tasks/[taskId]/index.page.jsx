@@ -22,6 +22,7 @@ const EditTask = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [done, setDone] = useState(false);
+  const [limit, setLimit] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,6 +36,8 @@ const EditTask = () => {
       setTitle(task.title);
       setDetail(task.detail);
       setDone(task.done);
+      const limitValue = task.limit ? task.limit.split('T')[0] : '';
+      setLimit(limitValue);
     }
   }, [task]);
 
@@ -49,7 +52,17 @@ const EditTask = () => {
 
       setIsSubmitting(true);
 
-      void dispatch(updateTask({ id: taskId, title, detail, done }))
+      const limitValue = limit ? new Date(limit).toISOString() : null;
+
+      void dispatch(
+        updateTask({
+          id: taskId,
+          title,
+          detail,
+          done,
+          limit: limitValue,
+        })
+      )
         .unwrap()
         .then(() => {
           navigate(`/lists/${listId}`);
@@ -61,7 +74,7 @@ const EditTask = () => {
           setIsSubmitting(false);
         });
     },
-    [title, taskId, listId, detail, done, navigate, dispatch]
+    [title, taskId, listId, detail, done, limit, navigate, dispatch]
   );
 
   return (
@@ -85,6 +98,15 @@ const EditTask = () => {
           placeholder="Blah blah blah"
           value={detail}
           onChange={event => setDetail(event.target.value)}
+        />
+        <TextField
+          label={'Due Date'}
+          id={id}
+          idTitle="limit"
+          type="date"
+          placeholder=""
+          value={limit}
+          onChange={event => setLimit(event.target.value)}
         />
         <CheckboxField
           label={'Is Done'}

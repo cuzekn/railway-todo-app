@@ -6,7 +6,15 @@
 :root {
   --indigo-600: #4f46e5;
 
+  --red-50: #fef2f2;
   --red-500: #ef4444;
+  --red-700: #b91c1c;
+
+  --amber-50: #fffbeb;
+  --amber-700: #b45309;
+
+  --blue-50: #eff6ff;
+  --blue-700: #1d4ed8;
 
   --slate-50: #f8fafc;
   --slate-100: #f1f5f9;
@@ -99,6 +107,29 @@
 
 .app_input::placeholder {
   color: var(--slate-500);
+}
+
+.app_input[type='date'] {
+  cursor: pointer;
+  position: relative;
+}
+
+.app_input[type='date']::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.app_input[type='date']::-webkit-inner-spin-button,
+.app_input[type='date']::-webkit-clear-button {
+  display: none;
 }
 
 .main_content {

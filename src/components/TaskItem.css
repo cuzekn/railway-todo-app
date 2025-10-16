@@ -74,3 +74,26 @@
   font-size: 1rem;
   color: var(--slate-500);
 }
+
+.task_item__due_date {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  width: fit-content;
+}
+
+.task_item__due_date.overdue {
+  color: var(--red-700);
+  background-color: var(--red-50);
+  font-weight: 500;
+}
+
+.task_item__due_date.today {
+  color: var(--amber-700);
+  background-color: var(--amber-50);
+}
+
+.task_item__due_date.tomorrow {
+  color: var(--blue-700);
+  background-color: var(--blue-50);
+}

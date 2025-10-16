@@ -17,6 +17,7 @@ export const TaskCreateForm = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [done, setDone] = useState(false);
+  const [limit, setLimit] = useState('');
 
   const handleToggle = useCallback(() => {
     setDone(prev => !prev);
@@ -46,6 +47,7 @@ export const TaskCreateForm = () => {
   const handleDiscard = useCallback(() => {
     setTitle('');
     setDetail('');
+    setLimit('');
     setFormState('initial');
     setDone(false);
   }, []);
@@ -56,7 +58,12 @@ export const TaskCreateForm = () => {
 
       setFormState('submitting');
 
-      void dispatch(createTask({ title, detail, done }))
+      // limitをISO形式に変換（APIが期待する形式）
+      const limitValue = limit ? new Date(limit).toISOString() : null;
+
+      void dispatch(
+        createTask({ title, detail, done, limit: limitValue })
+      )
         .unwrap()
         .then(() => {
           handleDiscard();
@@ -66,7 +73,7 @@ export const TaskCreateForm = () => {
           setFormState('focused');
         });
     },
-    [title, detail, done, handleDiscard, dispatch]
+    [title, detail, done, limit, handleDiscard, dispatch]
   );
 
   useEffect(() => {
@@ -139,6 +146,18 @@ export const TaskCreateForm = () => {
             onBlur={handleBlur}
             disabled={formState === 'submitting'}
           />
+          <div className="task_create_form__due_date">
+            <label htmlFor="limit">期限:</label>
+            <input
+              id="limit"
+              type="date"
+              className="task_create_form__date_input"
+              value={limit}
+              onChange={e => setLimit(e.target.value)}
+              onBlur={handleBlur}
+              disabled={formState === 'submitting'}
+            />
+          </div>
           <div className="task_create_form__actions">
             <button
               type="button"

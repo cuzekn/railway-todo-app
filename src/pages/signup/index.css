@@ -34,3 +34,35 @@
 .signup__form_actions_spacer {
   flex: 1;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .signup {
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .signup__title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .signup__form {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup {
+    gap: 1rem;
+  }
+
+  .signup__title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .signup__form {
+    gap: 1rem;
+  }
+}

@@ -59,3 +59,47 @@
 .modal_body {
   padding: 1.5rem;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .modal_overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+
+  .modal_content {
+    max-width: 100%;
+    max-height: calc(100vh - 2rem);
+  }
+
+  .modal_header {
+    padding: 1rem;
+  }
+
+  .modal_title {
+    font-size: 1.25rem;
+  }
+
+  .modal_close {
+    font-size: 1.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .modal_body {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal_overlay {
+    padding: 0;
+  }
+
+  .modal_content {
+    border-radius: 0;
+    max-height: 100vh;
+    height: 100vh;
+  }
+}

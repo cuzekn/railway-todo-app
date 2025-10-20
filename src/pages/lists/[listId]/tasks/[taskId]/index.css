@@ -43,3 +43,48 @@
 .edit_task__form_actions_delete {
   --app-button-accent-color: var(--red-500);
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .edit_task {
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .edit_task__title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .edit_task__form {
+    gap: 1.25rem;
+  }
+
+  .edit_task__form_actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .edit_task__form_actions_spacer {
+    display: none;
+  }
+
+  .edit_task__form_actions .app_button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .edit_task {
+    gap: 1rem;
+  }
+
+  .edit_task__title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .edit_task__form {
+    gap: 1rem;
+  }
+}

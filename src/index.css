@@ -137,3 +137,27 @@
   padding-left: 360px;
   min-height: 100vh;
 }
+
+/* Responsive Design - Tablet and Mobile */
+@media (max-width: 1024px) {
+  .main_content {
+    padding: 60px 24px;
+    padding-left: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main_content {
+    padding: 72px 16px 20px 16px;
+  }
+
+  .app_button {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .app_input {
+    font-size: 1rem;
+    padding: 0.625rem 0.875rem;
+  }
+}

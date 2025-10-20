@@ -34,3 +34,35 @@
 .signin__form_actions_spacer {
   flex: 1;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .signin {
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .signin__title {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+
+  .signin__form {
+    gap: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signin {
+    gap: 1rem;
+  }
+
+  .signin__title {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+
+  .signin__form {
+    gap: 1rem;
+  }
+}

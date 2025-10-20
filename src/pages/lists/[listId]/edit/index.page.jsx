@@ -2,8 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { BackButton } from '@/components/BackButton';
 import { FormActions } from '@/components/FormActionButton';
+import { Modal } from '@/components/Modal';
 import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { deleteList, fetchLists, updateList } from '@/store/list';
@@ -12,13 +12,11 @@ import './index.css';
 
 const EditList = () => {
   const id = useId();
-
   const { listId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [title, setTitle] = useState('');
-
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -26,6 +24,7 @@ const EditList = () => {
     state.list.lists?.find(list => list.id === listId)
   );
 
+  // リストデータをフォームに反映
   useEffect(() => {
     if (list) {
       setTitle(list.title);
@@ -36,16 +35,30 @@ const EditList = () => {
     void dispatch(fetchLists());
   }, [dispatch, listId]);
 
+  const handleClose = useCallback(() => {
+    // モーダルを閉じてリスト詳細ページに戻る
+    navigate(`/lists/${listId}`);
+  }, [navigate, listId]);
+
+  const handleDeleteSuccess = useCallback(() => {
+    // リスト削除後はホーム（リスト一覧）に戻る
+    navigate('/');
+  }, [navigate]);
+
   const onSubmit = useCallback(
     event => {
       event.preventDefault();
-
       setIsSubmitting(true);
 
-      void dispatch(updateList({ id: listId, title }))
+      void dispatch(
+        updateList({
+          id: listId,
+          title,
+        })
+      )
         .unwrap()
         .then(() => {
-          navigate(`/lists/${listId}`);
+          handleClose();
         })
         .catch(err => {
           setErrorMessage(err.message);
@@ -54,15 +67,20 @@ const EditList = () => {
           setIsSubmitting(false);
         });
     },
-    [dispatch, listId, title, navigate]
+    [title, listId, dispatch, handleClose]
   );
 
+  const handleDelete = useCallback(() => {
+    return dispatch(deleteList({ id: listId })).unwrap();
+  }, [listId, dispatch]);
+
+  if (!list) return null;
+
   return (
-    <main className="edit_list">
-      <BackButton />
-      <h2 className="edit_list__title">Edit List</h2>
-      <p className="edit_list__error">{errorMessage}</p>
-      <form className="edit_list__form" onSubmit={onSubmit}>
+    <Modal isOpen={true} onClose={handleClose} title="Edit List">
+      <form onSubmit={onSubmit}>
+        {errorMessage && <p className="error_message">{errorMessage}</p>}
+
         <TextField
           label={'Name'}
           id={id}
@@ -71,17 +89,19 @@ const EditList = () => {
           value={title}
           onChange={event => setTitle(event.target.value)}
         />
+
         <FormActions
-          cancelPath={`/lists/${listId}`}
-          onDelete={() => dispatch(deleteList({ id: listId })).unwrap()}
-          onDeleteSuccess={() => navigate('/')}
+          cancelPath={null}
+          onCancel={handleClose}
+          onDelete={handleDelete}
+          onDeleteSuccess={handleDeleteSuccess}
           onDeleteError={error => setErrorMessage(error.message)}
           deleteConfirmMessage="Are you sure you want to delete this list?"
           submitLabel="Update"
           isSubmitting={isSubmitting}
         />
       </form>
-    </main>
+    </Modal>
   );
 };
 

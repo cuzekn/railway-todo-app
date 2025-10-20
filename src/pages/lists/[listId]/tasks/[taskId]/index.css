@@ -11,6 +11,11 @@
   color: var(--red-500);
 }
 
+.error_message {
+  color: var(--red-500);
+  margin-bottom: 1rem;
+}
+
 .edit_task__title {
   color: var(--slate-700);
   font-size: 2.25rem;

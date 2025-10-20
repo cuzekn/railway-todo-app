@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { BackButton } from '@/components/BackButton';
 import { CheckboxField } from '@/components/CheckboxField';
 import { FormActions } from '@/components/FormActionButton';
+import { Modal } from '@/components/Modal';
 import { TextField } from '@/components/TextField';
 import { useId } from '@/hooks/useId';
 import { setCurrentList } from '@/store/list';
@@ -46,6 +46,15 @@ const EditTask = () => {
     void dispatch(fetchTasks());
   }, [listId, dispatch]);
 
+  const handleClose = useCallback(() => {
+    navigate(`/lists/${listId}`);
+  }, [navigate, listId]);
+
+  const handleCancel = useCallback(() => {
+    // EditListと統一：キャンセル時もリスト詳細に戻る
+    navigate(`/lists/${listId}`);
+  }, [navigate, listId]);
+
   const onSubmit = useCallback(
     event => {
       event.preventDefault();
@@ -65,7 +74,7 @@ const EditTask = () => {
       )
         .unwrap()
         .then(() => {
-          navigate(`/lists/${listId}`);
+          handleClose();
         })
         .catch(err => {
           setErrorMessage(err.message);
@@ -74,15 +83,20 @@ const EditTask = () => {
           setIsSubmitting(false);
         });
     },
-    [title, taskId, listId, detail, done, limit, navigate, dispatch]
+    [title, taskId, detail, done, limit, dispatch, handleClose]
   );
 
+  const handleDelete = useCallback(() => {
+    return dispatch(deleteTask({ id: taskId })).unwrap();
+  }, [taskId, dispatch]);
+
+  if (!task) return null;
+
   return (
-    <main className="edit_list">
-      <BackButton />
-      <h2 className="edit_list__title">Edit List</h2>
-      <p className="edit_list__error">{errorMessage}</p>
-      <form className="edit_list__form" onSubmit={onSubmit}>
+    <Modal isOpen={true} onClose={handleClose} title="Edit Task">
+      <form onSubmit={onSubmit}>
+        {errorMessage && <p className="error_message">{errorMessage}</p>}
+
         <TextField
           label={'Title'}
           id={id}
@@ -91,6 +105,7 @@ const EditTask = () => {
           value={title}
           onChange={event => setTitle(event.target.value)}
         />
+
         <TextField
           label={'Description'}
           id={id}
@@ -99,6 +114,7 @@ const EditTask = () => {
           value={detail}
           onChange={event => setDetail(event.target.value)}
         />
+
         <TextField
           label={'Due Date'}
           id={id}
@@ -108,6 +124,7 @@ const EditTask = () => {
           value={limit}
           onChange={event => setLimit(event.target.value)}
         />
+
         <CheckboxField
           label={'Is Done'}
           id={id}
@@ -116,9 +133,11 @@ const EditTask = () => {
           checked={done}
           onChange={event => setDone(event.target.checked)}
         />
+
         <FormActions
-          cancelPath={`/lists/${listId}`}
-          onDelete={() => dispatch(deleteTask({ id: taskId })).unwrap()}
+          cancelPath={null}
+          onCancel={handleCancel}
+          onDelete={handleDelete}
           onDeleteSuccess={() => navigate('/')}
           onDeleteError={error => setErrorMessage(error.message)}
           deleteConfirmMessage="Are you sure you want to delete this task?"
@@ -126,7 +145,7 @@ const EditTask = () => {
           isSubmitting={isSubmitting}
         />
       </form>
-    </main>
+    </Modal>
   );
 };
 

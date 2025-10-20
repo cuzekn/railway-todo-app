@@ -1,11 +1,10 @@
 // components/FormActions/index.jsx
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 
 import './FormActionButton.css';
 
 export const FormActions = ({
-  cancelPath = '/',
+  onCancel,
   onDelete,
   onDeleteSuccess,
   onDeleteError,
@@ -34,9 +33,14 @@ export const FormActions = ({
 
   return (
     <div className="form_actions">
-      <Link to={cancelPath} data-variant="secondary" className="app_button">
+      <button
+        type="button"
+        data-variant="secondary"
+        className="app_button"
+        onClick={onCancel}
+      >
         Cancel
-      </Link>
+      </button>
       <div className="form_actions_spacer" />
       {showDelete && (
         <button

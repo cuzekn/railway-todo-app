@@ -26,6 +26,7 @@ export const TaskItem = ({ task }) => {
   const [editDetail, setEditDetail] = useState('');
   const [editDone, setEditDone] = useState(false);
   const [editLimit, setEditLimit] = useState('');
+  const [editTime, setEditTime] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -35,8 +36,20 @@ export const TaskItem = ({ task }) => {
       setEditTitle(task.title);
       setEditDetail(task.detail);
       setEditDone(task.done);
-      const limitValue = task.limit ? task.limit.split('T')[0] : '';
-      setEditLimit(limitValue);
+      if (task.limit) {
+        const limitDate = new Date(task.limit);
+        const dateValue = task.limit.split('T')[0];
+        const hasTime =
+          limitDate.getHours() !== 0 || limitDate.getMinutes() !== 0;
+        const timeValue = hasTime
+          ? `${String(limitDate.getHours()).padStart(2, '0')}:${String(limitDate.getMinutes()).padStart(2, '0')}`
+          : '';
+        setEditLimit(dateValue);
+        setEditTime(timeValue);
+      } else {
+        setEditLimit('');
+        setEditTime('');
+      }
     }
   }, [task]);
 
@@ -52,7 +65,14 @@ export const TaskItem = ({ task }) => {
       event.preventDefault();
       setIsUpdating(true);
 
-      const limitValue = editLimit ? new Date(editLimit).toISOString() : null;
+      // 日付と時刻を結合してISO形式に変換
+      let limitValue = null;
+      if (editLimit) {
+        const dateTimeString = editTime
+          ? `${editLimit}T${editTime}`
+          : editLimit;
+        limitValue = new Date(dateTimeString).toISOString();
+      }
 
       void dispatch(
         updateTask({
@@ -74,7 +94,7 @@ export const TaskItem = ({ task }) => {
           setIsUpdating(false);
         });
     },
-    [editTitle, task.id, editDetail, editDone, editLimit, dispatch]
+    [editTitle, task.id, editDetail, editDone, editLimit, editTime, dispatch]
   );
 
   const handleDelete = useCallback(() => {
@@ -87,50 +107,66 @@ export const TaskItem = ({ task }) => {
     const limitDate = new Date(limit);
     const now = new Date();
 
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const limitDay = new Date(
-      limitDate.getFullYear(),
-      limitDate.getMonth(),
-      limitDate.getDate()
-    );
+    // 期限日時の表示（年月日 時:分）
+    const dateString = limitDate.toLocaleDateString('ja-JP', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+    });
+    const hasTime = limitDate.getHours() !== 0 || limitDate.getMinutes() !== 0;
+    const timeString = hasTime
+      ? ` ${limitDate.toLocaleTimeString('ja-JP', {
+          hour: '2-digit',
+          minute: '2-digit',
+        })}`
+      : '';
+    const fullDateTimeString = `${dateString}${timeString}`;
 
-    // 期限切れの場合、経過日数を表示
-    if (limitDay < today) {
-      const diffTime = today.getTime() - limitDay.getTime();
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-      return `期限切れ (${diffDays}日経過)`;
+    // 残り時間を計算（ミリ秒単位）
+    const diffMs = limitDate.getTime() - now.getTime();
+
+    // 期限切れの場合
+    if (diffMs < 0) {
+      return { dateTime: fullDateTimeString, remaining: '期限切れ', className: 'overdue' };
     }
 
-    // 今日判定
-    if (limitDay.getTime() === today.getTime()) {
-      return '今日';
+    // 残り時間を日・時間・分に変換
+    const diffMinutes = Math.floor(diffMs / (1000 * 60));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+    const remainingHours = diffHours % 24;
+    const remainingMinutes = diffMinutes % 60;
+
+    // 残り時間の表示
+    let remainingString = '';
+    if (diffDays > 0) {
+      if (remainingHours > 0) {
+        remainingString = `あと${diffDays}日${remainingHours}時間`;
+      } else {
+        remainingString = `あと${diffDays}日`;
+      }
+    } else if (diffHours > 0) {
+      if (remainingMinutes > 0) {
+        remainingString = `あと${diffHours}時間${remainingMinutes}分`;
+      } else {
+        remainingString = `あと${diffHours}時間`;
+      }
+    } else {
+      remainingString = `あと${diffMinutes}分`;
     }
 
-    // 明日判定
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    if (limitDay.getTime() === tomorrow.getTime()) {
-      return '明日';
+    // 残り時間に応じたクラス名を設定
+    let className = '';
+    if (diffHours < 24) {
+      // 24時間以内は「今日」扱い
+      className = 'today';
+    } else if (diffHours < 48) {
+      // 24~48時間は「明日」扱い
+      className = 'tomorrow';
     }
 
-    // 期限前の残り日数を表示
-    const diffTime = limitDay.getTime() - today.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    // 通常の日付表示
-    const options = { month: 'numeric', day: 'numeric' };
-    const formatted = limitDate.toLocaleDateString('ja-JP', options);
-
-    // 年が異なる場合
-    if (limitDate.getFullYear() !== now.getFullYear()) {
-      return `${limitDate.toLocaleDateString('ja-JP', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      })} (残り${diffDays}日)`;
-    }
-
-    return `${formatted} (残り${diffDays}日)`;
+    return { dateTime: fullDateTimeString, remaining: remainingString, className };
   }, [limit]);
 
   return (
@@ -165,15 +201,12 @@ export const TaskItem = ({ task }) => {
         </button>
       </div>
       <div className="task_item__detail">{detail}</div>
-      {limit && !done && (
+      {limit && !done && formattedLimit && (
         <div
-          className={`task_item__due_date ${
-            formattedLimit?.startsWith('期限切れ') ? 'overdue' : ''
-          } ${formattedLimit === '今日' ? 'today' : ''} ${
-            formattedLimit === '明日' ? 'tomorrow' : ''
-          }`}
+          className={`task_item__due_date ${formattedLimit.className}`}
         >
-          期限: {formattedLimit}
+          <div>期限: {formattedLimit.dateTime}</div>
+          <div>残り時間: {formattedLimit.remaining}</div>
         </div>
       )}
 
@@ -212,6 +245,17 @@ export const TaskItem = ({ task }) => {
             placeholder=""
             value={editLimit}
             onChange={event => setEditLimit(event.target.value)}
+          />
+
+          <TextField
+            label={'Time'}
+            id={formId}
+            idTitle="time"
+            type="time"
+            placeholder="--:--"
+            value={editTime}
+            onChange={event => setEditTime(event.target.value)}
+            disabled={!editLimit}
           />
 
           <CheckboxField

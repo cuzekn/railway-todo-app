@@ -42,6 +42,10 @@ const NewList = () => {
     [dispatch, navigate, title]
   );
 
+  const handleCancel = useCallback(() => {
+    navigate(-1); // 前のページに戻る
+  }, [navigate]);
+
   return (
     <main className="new_list">
       <BackButton />
@@ -60,6 +64,7 @@ const NewList = () => {
           showDelete={false}
           submitLabel="Create"
           isSubmitting={isSubmitting}
+          onCancel={handleCancel}
         />
       </form>
     </main>

@@ -94,3 +94,109 @@
 .task_create_form__spacer {
   flex: 1;
 }
+
+.task_create_form__due_date {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.task_create_form__date_input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--slate-300);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  position: relative;
+}
+
+.task_create_form__date_input:focus {
+  outline: none;
+  border-color: var(--indigo-600);
+}
+
+.task_create_form__date_input::-webkit-calendar-picker-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: auto;
+  height: auto;
+  color: transparent;
+  background: transparent;
+  cursor: pointer;
+}
+
+.task_create_form__date_input::-webkit-inner-spin-button,
+.task_create_form__date_input::-webkit-clear-button {
+  display: none;
+}
+
+.task_create_form__time_input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--slate-300);
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  position: relative;
+  min-width: 6rem;
+}
+
+.task_create_form__time_input:focus {
+  outline: none;
+  border-color: var(--indigo-600);
+}
+
+.task_create_form__time_input:disabled {
+  background-color: var(--slate-100);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.task_create_form__time_input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task_create_form {
+    padding: 1rem;
+    gap: 0.375rem;
+  }
+
+  .task_create_form__title {
+    font-size: 1.125rem;
+  }
+
+  .task_create_form__detail {
+    font-size: 0.875rem;
+  }
+
+  .task_create_form__actions {
+    margin-top: 0.75rem;
+    flex-direction: row;
+  }
+
+  .task_create_form__due_date {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .task_create_form__date_input,
+  .task_create_form__time_input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .task_create_form {
+    padding: 0.75rem;
+  }
+
+  .task_create_form__title {
+    font-size: 1rem;
+  }
+}

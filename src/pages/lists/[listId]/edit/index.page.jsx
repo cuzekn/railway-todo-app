@@ -1,116 +1,108 @@
-import { useCallback, useState, useEffect } from 'react'
-import { Link, useHistory, useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
-import { BackButton } from '~/components/BackButton'
-import './index.css'
-import { fetchLists, updateList, deleteList } from '~/store/list'
-import { useId } from '~/hooks/useId'
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { FormActions } from '@/components/FormActionButton';
+import { Modal } from '@/components/Modal';
+import { TextField } from '@/components/TextField';
+import { useId } from '@/hooks/useId';
+import { deleteList, fetchLists, updateList } from '@/store/list';
+
+import './index.css';
 
 const EditList = () => {
-  const id = useId()
+  const id = useId();
+  const { listId } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const { listId } = useParams()
-  const history = useHistory()
-  const dispatch = useDispatch()
-
-  const [title, setTitle] = useState('')
-
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [title, setTitle] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const list = useSelector(state =>
-    state.list.lists?.find(list => list.id === listId),
-  )
+    state.list.lists?.find(list => list.id === listId)
+  );
 
+  // リストデータをフォームに反映
   useEffect(() => {
     if (list) {
-      setTitle(list.title)
+      setTitle(list.title);
     }
-  }, [list])
+  }, [list]);
 
   useEffect(() => {
-    void dispatch(fetchLists())
-  }, [listId])
+    void dispatch(fetchLists());
+  }, [dispatch, listId]);
+
+  const handleClose = useCallback(() => {
+    // モーダルを閉じてリスト詳細ページに戻る
+    navigate(`/lists/${listId}`);
+  }, [navigate, listId]);
+
+  const handleDeleteSuccess = useCallback(() => {
+    // リスト削除後はホーム（リスト一覧）に戻る
+    navigate('/');
+  }, [navigate]);
 
   const onSubmit = useCallback(
     event => {
-      event.preventDefault()
+      event.preventDefault();
+      setIsSubmitting(true);
 
-      setIsSubmitting(true)
-
-      void dispatch(updateList({ id: listId, title }))
+      void dispatch(
+        updateList({
+          id: listId,
+          title,
+        })
+      )
         .unwrap()
         .then(() => {
-          history.push(`/lists/${listId}`)
+          handleClose();
         })
         .catch(err => {
-          setErrorMessage(err.message)
+          setErrorMessage(err.message);
         })
         .finally(() => {
-          setIsSubmitting(false)
-        })
+          setIsSubmitting(false);
+        });
     },
-    [title, listId],
-  )
+    [title, listId, dispatch, handleClose]
+  );
 
   const handleDelete = useCallback(() => {
-    if (!window.confirm('Are you sure you want to delete this list?')) {
-      return
-    }
+    return dispatch(deleteList({ id: listId })).unwrap();
+  }, [listId, dispatch]);
 
-    setIsSubmitting(true)
-
-    void dispatch(deleteList({ id: listId }))
-      .unwrap()
-      .then(() => {
-        history.push(`/`)
-      })
-      .catch(err => {
-        setErrorMessage(err.message)
-      })
-      .finally(() => {
-        setIsSubmitting(false)
-      })
-  }, [])
+  if (!list) return null;
 
   return (
-    <main className="edit_list">
-      <BackButton />
-      <h2 className="edit_list__title">Edit List</h2>
-      <p className="edit_list__error">{errorMessage}</p>
-      <form className="edit_list__form" onSubmit={onSubmit}>
-        <fieldset className="edit_list__form_field">
-          <label htmlFor={`${id}-title`} className="edit_list__form_label">
-            Name
-          </label>
-          <input
-            id={`${id}-title`}
-            className="app_input"
-            placeholder="Family"
-            value={title}
-            onChange={event => setTitle(event.target.value)}
-          />
-        </fieldset>
-        <div className="edit_list__form_actions">
-          <Link to="/" data-variant="secondary" className="app_button">
-            Cancel
-          </Link>
-          <div className="edit_list__form_actions_spacer"></div>
-          <button
-            type="button"
-            className="app_button edit_list__form_actions_delete"
-            disabled={isSubmitting}
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
-            Update
-          </button>
-        </div>
-      </form>
-    </main>
-  )
-}
+    <Modal isOpen={true} onClose={handleClose} title="Edit List">
+      <form onSubmit={onSubmit}>
+        {errorMessage && <p className="error_message">{errorMessage}</p>}
 
-export default EditList
+        <TextField
+          label={'Name'}
+          id={id}
+          idTitle="title"
+          placeholder="Family"
+          value={title}
+          onChange={event => setTitle(event.target.value)}
+        />
+
+        <FormActions
+          cancelPath={null}
+          onCancel={handleClose}
+          onDelete={handleDelete}
+          onDeleteSuccess={handleDeleteSuccess}
+          onDeleteError={error => setErrorMessage(error.message)}
+          deleteConfirmMessage="Are you sure you want to delete this list?"
+          submitLabel="Update"
+          isSubmitting={isSubmitting}
+        />
+      </form>
+    </Modal>
+  );
+};
+
+export default EditList;
